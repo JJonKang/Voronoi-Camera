@@ -1,6 +1,43 @@
 import vertexShaderSrc from 'vertex.glsl.js';
 import fragmentShaderSrc from 'fragment.glsl.js';
 
+function accessWebcam(video) {
+  return new Promise((resolve, reject) => {
+    const mediaConstraints = { audio: false, video: {
+      width: 1280,
+      height: 720,
+      brightness: {ideal: 2}
+    }
+  };
+
+  navigator.mediaDevices.getUserMedia(
+    mediaConstraints).then(mediaStream => {
+      video.srcObject = mediaStream;
+      video.setAttribute('playsinline', true);
+      video.onloadedmetadata = (e) => {
+        video.play();
+        resolve(video);
+      }
+    }).catch(err => {
+      reject(err);
+    });
+  });
+};
+
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+    img.onload = () => {
+      resolve(img);
+    };
+    img.onerror = () => {
+      reject(img);
+    };
+  });
+};
+
 function initialize() {
   console.log("Starting");
   // https://dev.to/learosema/realtime-video-processing-with-webgl-5653
