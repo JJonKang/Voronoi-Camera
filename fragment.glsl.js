@@ -47,10 +47,11 @@ vec3 surroundPixel(vec2 uv) {
 void main() {
   vec2 uv = floor(gl_FragCoord.xy / pixelSize) * pixelSize / u_resolution;
   uv.y = 1.0 - uv.y;
-  // vec2 noise = random(uv);
   vec3 color = surroundPixel(uv);
 
-  vec2 st = uv * 135.0; // cell size, change for bigger/smaller cells
+  vec3 camSeed = texture(texture0, uv).rgb;
+  // voronoi now based on camera vision
+  vec2 st = (uv + camSeed.rg * 0.05) * 135.0; // cell size, change for bigger/smaller cells
   vec2 i_st = floor(st);
   vec2 f_st = fract(st);
   float m_dist = 10.0; //min distance
@@ -62,7 +63,7 @@ void main() {
       vec2 point = random(i_st + neighbor);
       //the num * point is animation speed
       //the 0.5 + 0.5 is cell movement range
-      point = 0.5 + 0.5*sin(u_time + 6.2831*point);
+      point = 0.5 + 0.75*sin(u_time + 6.2831*point);
       vec2 diff = neighbor + point - f_st;
       float dist = length(diff);
 
@@ -74,7 +75,7 @@ void main() {
   }
 
   vec4 cam = texture(texture0, uv + vec2(m_dist) * 0.0215);
-  float brightness = length(color) / pow(1.1, 0.5) * 1.6; //change for brightness multiplier
+  float brightness = length(color) / pow(1.1, 0.5) * 1.4; //change for brightness multiplier
   //change the 2nd element in vec2(0.3, __) for how dark each cell should be
   if(length(color) > light4 * pow(3.0, 0.5)){
     fragColor = vec4(cam.rgb * dot(m_point, vec2(0.3, 0.1)) * brightness, 1.0);
