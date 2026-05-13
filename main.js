@@ -6,8 +6,8 @@
 // 2b) This would mean that half of this project would be to work on
 //     the fragment shaders.
 
-import vertexShaderSrc from '/vertex.glsl.js';
-import fragmentShaderSrc from '/fragment.glsl.js';
+import vertexShaderSrc from './vertex.glsl.js';
+import fragmentShaderSrc from './fragment.glsl.js';
 
 //////////////////////////////////////////////
 // Camera Permission
