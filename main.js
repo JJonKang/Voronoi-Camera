@@ -1,6 +1,16 @@
+// Project: Voronoi Shader with Camera using WebGL/GLSL
+// Author: Jonathan Kang
+// Main Focus: The intent behind this project is...
+// 1) To enable a webcamera for WebGL.
+// 2) To implement shaders into the data obtained from the webcamera
+// 2b) This would mean that half of this project would be to work on
+//     the fragment shaders.
+
 import vertexShaderSrc from '/vertex.glsl.js';
 import fragmentShaderSrc from '/fragment.glsl.js';
 
+//////////////////////////////////////////////
+// Camera Permission
 function accessWebcam(camera) {
   // wait until permission is granted
   return new Promise((resolve, reject) => {
@@ -23,10 +33,13 @@ function accessWebcam(camera) {
   });
 };
 
+//////////////////////////////////////////////
+// Initialization
+// +
+// Rendering
 async function initialize() {
   // https://dev.to/learosema/realtime-video-processing-with-webgl-5653
   // https://stackoverflow.com/questions/56639762/manipulate-a-webcam-stream-as-a-webgl-texture
-
 
   // screen setup
   const canvas = document.querySelector('canvas');
@@ -84,7 +97,7 @@ async function initialize() {
   const uRes = gl.getUniformLocation(program, 'u_resolution');
   gl.uniform2f(uRes, canvas.width, canvas.height);
 
-  // continually renders  camera details
+  // continually renders camera details
   function render() {
     // so that it won't break down before everything loads
     if (camera.readyState >= camera.HAVE_CURRENT_DATA) {
