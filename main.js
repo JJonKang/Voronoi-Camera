@@ -43,8 +43,8 @@ async function initialize() {
 
   // screen setup
   const canvas = document.querySelector('canvas');
-  canvas.width = canvas.clientWidth * 2.2;
-  canvas.height = canvas.clientHeight * 2.2;
+  canvas.width = canvas.clientWidth * 2.5;
+  canvas.height = canvas.clientHeight * 2.5;
   const gl = canvas.getContext('webgl2');
   gl.viewport(0, 0, canvas.width, canvas.height);
 
@@ -98,15 +98,16 @@ async function initialize() {
   gl.uniform2f(uRes, canvas.width, canvas.height);
 
   // continually renders camera details
-  function render() {
+  function render(t) {
     // so that it won't break down before everything loads
     if (camera.readyState >= camera.HAVE_CURRENT_DATA) {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, camera);
     }
+    gl.uniform1f(gl.getUniformLocation(program, 'u_time'), t * 0.001);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     requestAnimationFrame(render);
   }
-  render();
+  requestAnimationFrame(render);
 };
 
 window.onload = initialize;
