@@ -7,11 +7,64 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
     canvas { display: block; }
+    #config {
+        position: absolute;
+        left: 25px;
+        top: 25px;
+        text-align: center;
+        background-color: #193a87bd;
+        color: rgb(220, 220, 220);
+        border-style: solid;
+        border-color: rgba(107, 26, 148, 0.308);
+        border-width: 5px;
+        font-size: 1.2rem;
+        padding: 0.4%;
+    }
   </style>
 </head>
 <body>
   <canvas></canvas>
   <video id="camera" autoplay playsinline style="display:none"></video>
   <script src="main.js" type="module"></script>
+  <div id="config">
+    <table>
+      <tr>
+        <td>Cell Count</td>
+        <td>
+          <input value="20.0" id="cell-count" type="range" min="5.0" max="150.0" oninput="window.setCellCount()">
+        </td>
+      </tr>
+      <tr>
+        <td>Pixel Size</td>
+        <td>
+          <input value="2.0" id="pixel-size" type="range" min="1.0" max="12.0" oninput="window.setPixelSize()">
+        </td>
+      </tr>
+      <tr>
+        <td>Blur Sample</td>
+        <td>
+          <input value="5.0" id="blur-sample" type="range" min="0.1" max="10.0" step="0.1" oninput="window.setBlurSample()">
+        </td>
+      </tr>
+      <tr>
+        <td>Blur Spread Radius</td>
+        <td>
+          <input value="3.0" id="blur-spread" type="range" min="0.1" max="6.0" step="0.1" oninput="window.setBlurSpread()">
+        </td>
+      </tr>
+      <tr>
+        <td>Animation Speed</td>
+        <td>
+          <input value="0.75" id="animation-speed" type="range" min="0.25" max="1.5" step="0.25" oninput="window.setAnimationSpeed()">
+        </td>
+      </tr>
+      <tr>
+        <td>Brightness</td>
+        <td>
+          <input value="1.4" id="brightness" type="range" min="0.1" max="2.0" step="0.1" oninput="window.setBrightness()">
+        </td>
+      </tr>
+    </table>
+  </div>
 </body>
 </html>

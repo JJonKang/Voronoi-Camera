@@ -8,7 +8,12 @@ uniform sampler2D texture0;
 uniform vec2 u_resolution;
 uniform float u_time;
 
-float pixelSize = 2.0; //size of pixel
+uniform float cellCount; //cell count
+uniform float pixelSize; //size of pixel
+uniform float blurCount; // blur sample count
+uniform float blurSpread; // blur spread radius
+uniform float animationSpeed; //speed of the voronoi patterns' rotation
+uniform float brightness; //brightness
 
 out vec4 fragColor;
 
@@ -21,8 +26,6 @@ float light1 = 0.4;
 float light2 = 0.6;
 float light3 = 0.75;
 float light4 = 0.9;
-
-float blurCount = 5.0; //blur amount sample count
 
 vec3 surroundPixel(vec2 uv) {
   vec2 uvs[8]; // the neighboring pixels
@@ -37,8 +40,7 @@ vec3 surroundPixel(vec2 uv) {
 
   vec3 color = texture(texture0, uv).rgb;
   for(int i = 0; i < int(blurCount * 8.0); i++){
-    //__ * uvs, the num would be blur spread radius
-    color += texture(texture0, clamp(uv + 3.0 * uvs[int(mod(float(i), 8.0))] * (float(i) / 8.0), 0.0, 1.0)).rgb;
+    color += texture(texture0, clamp(uv + blurSpread * uvs[int(mod(float(i), 8.0))] * (float(i) / 8.0), 0.0, 1.0)).rgb;
   }
   color /= blurCount * 8.0 + 1.0;
   return color;
@@ -51,7 +53,7 @@ void main() {
 
   vec3 camSeed = texture(texture0, uv).rgb;
   // voronoi now based on camera vision
-  vec2 st = (uv + camSeed.rg * 0.05) * 135.0; // cell size, change for bigger/smaller cells
+  vec2 st = (uv + camSeed.rg * 0.05) * cellCount;
   vec2 i_st = floor(st);
   vec2 f_st = fract(st);
   float m_dist = 10.0; //min distance
@@ -61,9 +63,7 @@ void main() {
     for (int i=-1; i<=1; i++ ) {
       vec2 neighbor = vec2(float(i),float(j));
       vec2 point = random(i_st + neighbor);
-      //the num * point is animation speed
-      //the 0.5 + 0.5 is cell movement range
-      point = 0.5 + 0.75*sin(u_time + 6.2831*point);
+      point = 0.5 + animationSpeed * sin(u_time + 6.2831*point);
       vec2 diff = neighbor + point - f_st;
       float dist = length(diff);
 
@@ -75,7 +75,7 @@ void main() {
   }
 
   vec4 cam = texture(texture0, uv + vec2(m_dist) * 0.0215);
-  float brightness = length(color) / pow(1.1, 0.5) * 1.4; //change for brightness multiplier
+  float brightness = length(color) / pow(1.1, 0.5) * brightness;
   //change the 2nd element in vec2(0.3, __) for how dark each cell should be
   if(length(color) > light4 * pow(3.0, 0.5)){
     fragColor = vec4(cam.rgb * dot(m_point, vec2(0.3, 0.1)) * brightness, 1.0);

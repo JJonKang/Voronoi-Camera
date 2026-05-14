@@ -9,6 +9,13 @@
 import vertexShaderSrc from './vertex.glsl.js';
 import fragmentShaderSrc from './fragment.glsl.js';
 
+let cellCount = 20.0;
+let pixelSize = 2.0;
+let blurCount = 5.0;
+let blurSpread = 3.0;
+let animationSpeed = 0.75;
+let brightness = 1.4;
+
 //////////////////////////////////////////////
 // Camera Permission
 function accessWebcam(camera) {
@@ -32,6 +39,33 @@ function accessWebcam(camera) {
       }).catch(err => { reject(err); });
   });
 };
+
+//////////////////////////////////////////////
+// OPTIONS:
+// Cell Count
+window.setCellCount = function(){
+  cellCount = parseFloat(document.getElementById('cell-count').value);
+}
+// Pixel Size
+window.setPixelSize = function(){
+  pixelSize = parseFloat(document.getElementById('pixel-size').value);
+}
+// Blur Size
+window.setBlurSample = function(){
+  blurCount = parseFloat(document.getElementById('blur-sample').value);
+}
+// Blur Spread Radius
+window.setBlurSpread = function(){
+  blurSpread = parseFloat(document.getElementById('blur-spread').value);
+}
+// Animation Speed
+window.setAnimationSpeed = function(){
+  animationSpeed = parseFloat(document.getElementById('animation-speed').value);
+}
+// Brightness
+window.setBrightness = function(){
+  brightness = parseFloat(document.getElementById('brightness').value);
+}
 
 //////////////////////////////////////////////
 // Initialization
@@ -75,6 +109,14 @@ async function initialize() {
   gl.linkProgram(program);
   gl.useProgram(program);
 
+  // options setup
+  const uCellCount = gl.getUniformLocation(program, 'cellCount');
+  const uPixelSize = gl.getUniformLocation(program, 'pixelSize');
+  const uBlurCount = gl.getUniformLocation(program, 'blurCount');
+  const uBlurSpread = gl.getUniformLocation(program, 'blurSpread');
+  const uAnimationSpeed = gl.getUniformLocation(program, 'animationSpeed');
+  const uBrightness = gl.getUniformLocation(program, 'brightness');
+
   // create buffer vertices
   const buf = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -104,6 +146,12 @@ async function initialize() {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, camera);
     }
     gl.uniform1f(gl.getUniformLocation(program, 'u_time'), t * 0.001);
+    gl.uniform1f(uCellCount, cellCount);
+    gl.uniform1f(uPixelSize, pixelSize);
+    gl.uniform1f(uBlurCount, blurCount);
+    gl.uniform1f(uBlurSpread, blurSpread);
+    gl.uniform1f(uAnimationSpeed, animationSpeed);
+    gl.uniform1f(uBrightness, brightness);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     requestAnimationFrame(render);
   }
