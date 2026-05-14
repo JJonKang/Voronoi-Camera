@@ -75,22 +75,22 @@ void main() {
   }
 
   vec4 cam = texture(texture0, uv + vec2(m_dist) * 0.0215);
-  float brightness = length(color) / pow(1.1, 0.5) * brightness;
+  float brightnessScale = length(color) / pow(1.1, 0.5) * brightness;
   //change the 2nd element in vec2(0.3, __) for how dark each cell should be
   if(length(color) > light4 * pow(3.0, 0.5)){
-    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.17, 0.3)) * brightness, 1.0);
+    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.17, 0.3)) * brightnessScale, 1.0);
   }
   else if(length(color) > light3 * pow(3.0, 0.5)){
-    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.20, 0.4)) * brightness, 1.0);
+    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.20, 0.4)) * brightnessScale, 1.0);
   }
   else if(length(color) > light2 * pow(3.0, 0.5)){
-    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.23, 0.5)) * brightness, 1.0);
+    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.23, 0.5)) * brightnessScale, 1.0);
   }
   else if(length(color) > light1 * pow(3.0, 0.5)){
-    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.26, 0.6)) * brightness, 1.0);
+    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.26, 0.6)) * brightnessScale, 1.0);
   }
   else{
-    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.3, 0.8)) * brightness, 1.0);
+    fragColor = vec4(cam.rgb * dot(m_point, vec2(0.3, 0.8)) * brightnessScale, 1.0);
   }
 
 }
